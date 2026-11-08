@@ -27,31 +27,87 @@ public class LoanExtent {
 			e.printStackTrace();
 		} 
 	}
-	public Loan createLoan(Resource resource, Object subscriber, GregorianCalendar gregorianCalendar) throws Exception {
-		if ( resource == null ) {
-			throw new NullPointerException("Resource parameter can not be null");
+	public synchronized Loan createLoan(Resource resource,
+										Object subscriber,
+										GregorianCalendar date) throws Exception {
+
+		Objects.requireNonNull(resource, "Resource cannot be null");
+		Objects.requireNonNull(subscriber, "Subscriber cannot be null");
+		Objects.requireNonNull(date, "Date cannot be null");
+
+		if (resource.getLoan() != null) {
+			throw new IllegalStateException("This resource is already on loan");
 		}
-		if ( subscriber == null ) {
-			throw new NullPointerException("Subscriber parameter can not be null");
+		if (!(subscriber instanceof Student) &&
+				!(subscriber instanceof Pensioner) &&
+				!(subscriber instanceof PremiumMember)) {
+			throw new IllegalArgumentException(
+					"Invalid subscriber type"
+			);
 		}
+
+		if ("Game".equals(resource.getType()) &&
+				!(subscriber instanceof Student)) {
+			throw new IllegalArgumentException(
+					"Only students can borrow games"
+			);
+		}
+
+		if (getLoanCount(subscriber) >= getBorrowingLimit(subscriber)) {
+			throw new IllegalStateException(
+					"Borrowing limit reached"
+			);
+		}
+
 		Loan loan = new Loan();
-		resource.setLoan(loan);
-		if ( subscriber instanceof Student ) {
-			((Student)subscriber).addLoan(loan);
-		}
-		else if ( subscriber instanceof Pensioner ) {
-			((Pensioner)subscriber).addLoan(loan);
-		}
-		else if ( subscriber instanceof PremiumMember ) {
-			((PremiumMember)subscriber).addLoan(loan);
-		}
 		loan.setResource(resource);
 		loan.setSubscriber(subscriber);
-		loan.setLoanDate(gregorianCalendar);
-		loan.setId(getNextId());
+		loan.setLoanDate(date);
+
+		resource.setLoan(loan);
+
+		try {
+			addSubscriberLoan(subscriber, loan);
+		} catch (Exception e) {
+			resource.removeLoan();
+			throw e;
+		}
+
 		loans.put(loan.getId(), loan);
 		return loan;
 	}
+
+	private int getLoanCount(Object subscriber) {
+		if (subscriber instanceof Student s)
+			return s.getLoans().size();
+
+		if (subscriber instanceof Pensioner p)
+			return p.getLoans().size();
+
+		return ((PremiumMember) subscriber).getLoans().size();
+	}
+
+	private int getBorrowingLimit(Object subscriber) {
+		if (subscriber instanceof Student s)
+			return s.getMaxBorrowing();
+
+		if (subscriber instanceof Pensioner p)
+			return p.getMaxBorrowing();
+
+		return ((PremiumMember) subscriber).getMaxBorrowing();
+	}
+
+	private void addSubscriberLoan(Object subscriber, Loan loan)
+			throws Exception {
+
+		if (subscriber instanceof Student s)
+			s.addLoan(loan);
+		else if (subscriber instanceof Pensioner p)
+			p.addLoan(loan);
+		else
+			((PremiumMember) subscriber).addLoan(loan);
+	}
+
 	public Loan findByPrimaryKey(String id) {
 		return (Loan)loans.get(id);
 	}

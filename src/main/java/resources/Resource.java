@@ -4,13 +4,13 @@ import reporting.OutputServiceContributor;
 import loans.*;
 
 public class Resource  implements OutputServiceContributor {
-	public String id;
-	public String title;
-	public String gameType;
-	public String type;
-	public String author;
+	private String id;
+	private final String title;
+	private String gameType;
+	private final String type;
+	private String author;
 	
-	public Loan loan;
+	private Loan loan;
 	
 	public Resource(String type, String title, String extra){
 		this.type = type;
@@ -33,6 +33,8 @@ public class Resource  implements OutputServiceContributor {
 			this.gameType = extra;
 		}
 	}
+
+
 	void setId(String id) {
 		this.id = id;
 	}
@@ -41,6 +43,9 @@ public class Resource  implements OutputServiceContributor {
 	}
 	public String getTitle() {
 		return title;
+	}
+	public String getType() {
+		return type;
 	}
 	/**
 	 * Records the loan against this resource. Games may be loaned to Students
@@ -76,6 +81,8 @@ public class Resource  implements OutputServiceContributor {
 			return 28;
 		}
 	}
+
+
 	public double getSurcharge() {
 		if ( type.equals("Book") ) {
 			return 0;

@@ -8,10 +8,10 @@ import loans.Loan;
 import reporting.OutputServiceContributor;
 
 public class PremiumMember implements OutputServiceContributor {
-	public String id;
-	public String name;
-	public Map loans = new Hashtable();
-	public double monthlySubscription;
+	private String id;
+	private String name;
+	private final Map loans = new Hashtable();
+	private final double monthlySubscription;
 	
 	public PremiumMember(String id, String name, double monthlySubscription) {
 		this.id = id;
@@ -46,10 +46,9 @@ public class PremiumMember implements OutputServiceContributor {
 	
 	public void addLoan(Loan loan) throws Exception {
 		int projectedLoanCount = loans.size();
-		if ( projectedLoanCount > getMaxBorrowing() ) {
+		if ( projectedLoanCount >= getMaxBorrowing() ) {
 			throw new Exception(name+" has reached their borrowing limit.");
 		}
-		loan.setSubscriber(this);
 		loans.put(loan.getId(), loan);
 	}
 	

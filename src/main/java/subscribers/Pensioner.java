@@ -6,9 +6,9 @@ import java.util.*;
 import reporting.OutputServiceContributor;
 
 public class Pensioner  implements OutputServiceContributor {
-	public String id;
-	public String name;
-	public Map loans = new Hashtable();
+	private String id;
+	private String name;
+	private final Map loans = new Hashtable();
 	
 	public Pensioner(String id, String name) {
 		this.id = id;
@@ -37,10 +37,9 @@ public class Pensioner  implements OutputServiceContributor {
 	
 	public void addLoan(Loan loan) throws Exception {
 		int projectedLoanCount = loans.size();
-		if ( projectedLoanCount > getMaxBorrowing() ) { 
+		if ( projectedLoanCount >= getMaxBorrowing() ) {
 			throw new Exception(name+" has reached their borrowing limit.");
 		}
-		loan.setSubscriber(this);
 		loans.put(loan.getId(), loan);
 	}
 	
@@ -53,7 +52,7 @@ public class Pensioner  implements OutputServiceContributor {
 	}
 	
 	public int getMaxBorrowing(){
-		return 3;
+		return 5;
 	}
 	
 	public String getFormattedString() {

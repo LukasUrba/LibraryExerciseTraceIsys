@@ -7,10 +7,10 @@ import java.util.*;
 import reporting.OutputServiceContributor;
 
 public class Student implements OutputServiceContributor {
-	public String id;
-	public String name;
-	public Map loans = new Hashtable();
-	public String institution;
+	private String id;
+	private String name;
+	private final Map loans = new Hashtable();
+	private final String institution;
 	
 	public Student(String id, String name, String institution) {
 		this.id = id;
@@ -41,10 +41,9 @@ public class Student implements OutputServiceContributor {
 	
 	public void addLoan(Loan loan) throws Exception {
 		int projectedLoanCount = loans.size();
-		if ( projectedLoanCount > getMaxBorrowing() ) { 
+		if ( projectedLoanCount >= getMaxBorrowing() ) {
 			throw new Exception(name+" has reached their borrowing limit.");
 		}
-		loan.setSubscriber(this);
 		loans.put(loan.getId(), loan);
 	}
 	
@@ -60,7 +59,7 @@ public class Student implements OutputServiceContributor {
 	 * Students may borrow up to 5 resources at any one time.
 	 */
 	public int getMaxBorrowing() {
-		return 6;
+		return 5;
 	}
 	
 	public String getFormattedString() {

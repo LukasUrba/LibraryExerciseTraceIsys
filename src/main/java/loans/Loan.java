@@ -12,7 +12,7 @@ public class Loan  implements OutputServiceContributor {
 	private GregorianCalendar returnDate;
 	private String id;
 	
-	public static int idCounter = 0;
+	private static int idCounter = 0;
 	
 	public String getFormattedString() {
 		String formattedString = (resource==null?"Unknown":resource.getFormattedString()) + " loaned to ";
