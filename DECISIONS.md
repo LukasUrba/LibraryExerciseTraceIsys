@@ -6,6 +6,7 @@
 3. Changed field modifiers to private for better encapsulation.
 4. Changed LoanExtent to check for duplicate borrowing and only allow students to borrow games.
 5. Added overdue and return surcharge to Loan class
+6. File output service repaired.
 
 ### Problems left
 
@@ -21,3 +22,4 @@
 
 ### AI Use  
 - Helped to create pom.xml with future requirements
+- Guidance for changing the functioning of the FileWriter

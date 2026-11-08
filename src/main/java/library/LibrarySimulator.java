@@ -1,21 +1,25 @@
 package library;
 
-import java.util.GregorianCalendar;
-
 import reporting.ConsoleOutputService;
-import resources.*;
-import subscribers.*;
+import resources.Resource;
+import resources.ResourceExtent;
+import subscribers.SubscriberExtent;
+import reporting.FileOutputService;
+
+import java.io.IOException;
+import java.util.GregorianCalendar;
 
 public class LibrarySimulator {
 	LibraryServices library;
 	LibraryReportingService reporting;
-	public LibrarySimulator() {
+	public LibrarySimulator() throws IOException {
 		library = new LibraryServices();
 		reporting = new LibraryReportingService();
 		reporting.addOutputService(new ConsoleOutputService());
+		reporting.addOutputService(new FileOutputService("library-report.txt"));
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		LibrarySimulator librarySimulator = new LibrarySimulator();
 		librarySimulator.runSimulator();
 	}
