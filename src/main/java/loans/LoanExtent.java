@@ -6,10 +6,14 @@
  */
 package loans;
 
-import java.util.*;
+import resources.Resource;
+import resources.ResourceExtent;
+import subscribers.Pensioner;
+import subscribers.PremiumMember;
+import subscribers.Student;
+import subscribers.SubscriberExtent;
 
-import resources.*;
-import subscribers.*;
+import java.util.*;
 
 public class LoanExtent {
 	private static Map loans = new Hashtable();
@@ -114,6 +118,28 @@ public class LoanExtent {
 	public Collection getLoans() {
 		return loans.values();
 	}
+
+	public synchronized double returnLoan(Loan loan, GregorianCalendar date) {
+
+		if (loan == null || date == null || loans.get(loan.getId()) != loan) {
+			throw new IllegalArgumentException("Invalid loan or return date");
+		}
+
+		loan.setReturnDate(date);
+
+		Object subscriber = loan.getSubscriber();
+
+		if (subscriber instanceof Student s)
+			s.removeLoan(loan);
+		else if (subscriber instanceof Pensioner p)
+			p.removeLoan(loan);
+		else ((PremiumMember) subscriber).removeLoan(loan);
+
+		loan.getResource().removeLoan();
+
+		return loan.getReturnSurcharge();
+	}
+
 	public String getNextId() {
 		return "L" + (idCounter++);
 	}

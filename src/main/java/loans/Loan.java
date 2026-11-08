@@ -1,9 +1,13 @@
 package loans;
 
-import java.util.*;
-import resources.*;
 import reporting.OutputServiceContributor;
-import subscribers.*;
+import resources.Resource;
+import subscribers.Pensioner;
+import subscribers.PremiumMember;
+import subscribers.Student;
+
+import java.time.temporal.ChronoUnit;
+import java.util.GregorianCalendar;
 
 public class Loan  implements OutputServiceContributor {
 	private Resource resource;
@@ -11,6 +15,7 @@ public class Loan  implements OutputServiceContributor {
 	private GregorianCalendar loanDate;
 	private GregorianCalendar returnDate;
 	private String id;
+	private double returnTotal;
 	
 	private static int idCounter = 0;
 	
@@ -40,20 +45,28 @@ public class Loan  implements OutputServiceContributor {
 	void setId(String id) {
 		this.id = id;
 	}
-	public void setReturnDate(GregorianCalendar returnDate) {
-		if ( this.returnDate != null )
-			throw new IllegalStateException("Return date has already been assigned");
-		if ( subscriber instanceof Student ) {
-			((Student)subscriber).removeLoan(this);
+	public void setReturnDate(GregorianCalendar date) {
+		if (returnDate != null) {
+			throw new IllegalStateException("Loan has already been returned");
 		}
-		else if ( subscriber instanceof Pensioner ) {
-			((Pensioner)subscriber).removeLoan(this);
+
+		if (date == null || date.before(loanDate)) {
+			throw new IllegalArgumentException("Invalid return date");
 		}
-		else if ( subscriber instanceof PremiumMember ) {
-			((PremiumMember)subscriber).removeLoan(this);
-		}
-		resource.removeLoan();
-		this.returnDate = returnDate;
+
+		long days = ChronoUnit.DAYS.between(
+				loanDate.toZonedDateTime().toLocalDate(),
+				date.toZonedDateTime().toLocalDate()
+		);
+
+		returnTotal = resource.getSurcharge() *
+				Math.max(1, days);
+
+		returnDate = (GregorianCalendar) date.clone();
+	}
+
+	public double getReturnSurcharge() {
+		return returnTotal;
 	}
 
 	public void setLoanDate(GregorianCalendar loanDate) {
@@ -98,10 +111,16 @@ public class Loan  implements OutputServiceContributor {
 	 * period. Handles month and year boundaries correctly.
 	 */
 	public boolean isOverdue(GregorianCalendar today) {
-		if ( today == null || loanDate == null || resource == null ) {
+
+		if ( today == null || loanDate == null || resource == null || returnDate != null) {
 			return false;
 		}
-		int elapsedDays = today.get(Calendar.DAY_OF_MONTH) - loanDate.get(Calendar.DAY_OF_MONTH);
-		return elapsedDays > resource.getMaxLoanPeriod();
+
+		long days = ChronoUnit.DAYS.between(
+				loanDate.toZonedDateTime().toLocalDate(),
+				today.toZonedDateTime().toLocalDate()
+		);
+
+		return days > resource.getMaxLoanPeriod();
 	}
 }

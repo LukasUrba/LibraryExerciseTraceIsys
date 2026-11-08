@@ -1,10 +1,15 @@
 package library;
-import java.util.*;
 
-import loans.*;
+import loans.Loan;
+import loans.LoanExtent;
+import resources.Resource;
+import resources.ResourceExtent;
+import subscribers.Pensioner;
+import subscribers.PremiumMember;
+import subscribers.Student;
+import subscribers.SubscriberExtent;
 
-import subscribers.*;
-import resources.*;
+import java.util.GregorianCalendar;
 
 public class LibraryServices {
 	
@@ -26,10 +31,8 @@ public class LibraryServices {
 	public void loanResourceToSubscriber(Resource resource, Object subscriber, GregorianCalendar gregorianCalendar) throws Exception {
 		LoanExtent.INSTANCE.createLoan(resource, subscriber, gregorianCalendar);
 	}
-	public void returnedResource(Loan loan, GregorianCalendar gregorianCalendar) {
-		if ( loan != null ) {
-			loan.setReturnDate(gregorianCalendar);
-		}
+	public double returnedResource(Loan loan, GregorianCalendar date) {
+		return LoanExtent.INSTANCE.returnLoan(loan, date);
 	}
 
 }
