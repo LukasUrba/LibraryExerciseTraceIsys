@@ -1,13 +1,9 @@
 package audit;
 
-public class ConsoleAuditLogger implements AuditLogger{
+public class ConsoleAuditLogger implements AuditLogger {
     @Override
-    public void log(
-            String category, String action, String detail) {
+    public void log(String category, String action, String detail) {
 
-        System.out.println(
-                "AUDIT: " + category + " | " +
-                        action + " | " + detail
-        );
+        System.out.println("AUDIT: " + category + " | " + action + " | " + detail);
     }
 }

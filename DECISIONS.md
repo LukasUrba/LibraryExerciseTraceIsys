@@ -12,10 +12,12 @@
 9. Bash script to run in console without IDE added
 
 ### Problems left & Changes to be made
-- Monolithic class structure. Was left because it would be a massive code rewrite to restructure and consider with SOLID principles.
+- Monolithic class structure was left because it would be a massive code rewrite to restructure and consider with SOLID principles. To rebuild the system, I would separate business logic more clearly, using interfaces to reduce coupling and make the system easier to maintain and test.
 - Multiple methods unused and warnings given at compile time. These are left due to same reasons as above.
 - Data storage inside of methods. Would require a database structure to be written to change it.
 - Include more resource types for normal libraries such as films.
+- Original 3 loans are run through the LoanExtent constructor directly and skip the auditing. This was left as it was used as example and would need separate audit handling or be considered not preexisting.
+- Priority Members reservations and monthly payments have not been implemented. This would need a lot of clarification as well as consideration to implement.
 
 ### Assumptions  
 - Requirements state only students can borrow games, code states students and premium users. Former is implemented.

@@ -1,68 +1,61 @@
 package subscribers;
 
-import loans.*;
-
-import java.util.*;
-
+import loans.Loan;
 import reporting.OutputServiceContributor;
 
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Map;
+
 public class Student implements OutputServiceContributor {
-	private String id;
-	private String name;
-	private final Map loans = new Hashtable();
-	private final String institution;
-	
-	public Student(String id, String name, String institution) {
-		this.id = id;
-		this.name = name;
-		this.institution = institution;
-	}
-	
-	public Student(String name, String institution) {
-		this.name = name;
-		this.institution = institution;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+    private String id;
+    private final String name;
+    private final Map loans = new Hashtable();
+    private final String institution;
 
-	public String getId() {
-		return id;
-	}
+    public Student(String id, String name, String institution) {
+        this.id = id;
+        this.name = name;
+        this.institution = institution;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Student(String name, String institution) {
+        this.name = name;
+        this.institution = institution;
+    }
 
-	public String getName() {
-		return name;
-	}
-	
-	
-	public void addLoan(Loan loan) throws Exception {
-		int projectedLoanCount = loans.size();
-		if ( projectedLoanCount >= getMaxBorrowing() ) {
-			throw new Exception(name+" has reached their borrowing limit.");
-		}
-		loans.put(loan.getId(), loan);
-	}
-	
-	public void removeLoan(Loan loan) {
-		loans.remove(loan.getId());
-	}
-	
-	public Collection getLoans() {
-		return loans.values();
-	}
-	
-	/**
-	 * Students may borrow up to 5 resources at any one time.
-	 */
-	public int getMaxBorrowing() {
-		return 5;
-	}
-	
-	public String getFormattedString() {
-		return "Student: " + name + " - " + institution;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void addLoan(Loan loan) throws Exception {
+        int projectedLoanCount = loans.size();
+        if (projectedLoanCount >= getMaxBorrowing()) {
+            throw new Exception(name + " has reached their borrowing limit.");
+        }
+        loans.put(loan.getId(), loan);
+    }
+
+    public void removeLoan(Loan loan) {
+        loans.remove(loan.getId());
+    }
+
+    public Collection getLoans() {
+        return loans.values();
+    }
+
+    /**
+     * Students may borrow up to 5 resources at any one time.
+     */
+    public int getMaxBorrowing() {
+        return 5;
+    }
+
+    public String getFormattedString() {
+        return "Student: " + name + " - " + institution;
+    }
 }

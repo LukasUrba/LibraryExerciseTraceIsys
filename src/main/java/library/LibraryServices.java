@@ -15,55 +15,61 @@ import java.util.GregorianCalendar;
 
 public class LibraryServices {
 
-	private final AuditLogger audit;
+    private final AuditLogger audit;
 
-	public LibraryServices() {
-		this(new ConsoleAuditLogger());
-	}
-	public LibraryServices(AuditLogger audit) {
-		this.audit = audit;
-	}
-	public void addResource(Resource resource) {
-		ResourceExtent.INSTANCE.createResource(resource);
-	}
-	public void addPensioner(Pensioner pensioner) {
-		SubscriberExtent.INSTANCE.createPensioner(pensioner);
-	}
-	public void addStudent(Student student) {
-		SubscriberExtent.INSTANCE.createStudent(student);
-	}
-	public void addPremiumMember(PremiumMember premiumMember) {
-		SubscriberExtent.INSTANCE.createPremiumMember(premiumMember);
-	}
+    public LibraryServices() {
+        this(new ConsoleAuditLogger());
+    }
 
-	
-	public void loanResourceToSubscriber(Resource resource, Object subscriber, GregorianCalendar date) throws Exception {
+    public LibraryServices(AuditLogger audit) {
+        this.audit = audit;
+    }
 
-		Loan loan;
+    public void addResource(Resource resource) {
+        ResourceExtent.INSTANCE.createResource(resource);
+    }
 
-		try {
-			loan = LoanExtent.INSTANCE.createLoan(resource, subscriber, date);
-		} catch (Exception e) {
-			audit.log("LOAN", "REJECTED", e.getMessage());
-			throw e;
-		}
+    public void addPensioner(Pensioner pensioner) {
+        SubscriberExtent.INSTANCE.createPensioner(pensioner);
+    }
 
-		audit.log("LOAN", "CREATED", "Loan " + loan.getId() + " created");
-	}
-	public double returnedResource(Loan loan, GregorianCalendar date) {
+    public void addStudent(Student student) {
+        SubscriberExtent.INSTANCE.createStudent(student);
+    }
 
-		double surcharge;
+    public void addPremiumMember(PremiumMember premiumMember) {
+        SubscriberExtent.INSTANCE.createPremiumMember(premiumMember);
+    }
 
-		try {
-			surcharge = LoanExtent.INSTANCE.returnLoan(loan, date);
-		} catch (RuntimeException e) {
-			audit.log("LOAN", "RETURN_REJECTED", e.getMessage());
-			throw e;
-		}
 
-		audit.log("LOAN", "RETURNED", "Loan " + loan.getId() + " returned. Surcharge: £ " + surcharge);
+    public void loanResourceToSubscriber(Resource resource, Object subscriber, GregorianCalendar date) throws Exception {
 
-		return surcharge;
-	}
+        Loan loan;
+
+        try {
+            loan = LoanExtent.INSTANCE.createLoan(resource, subscriber, date);
+        } catch (Exception e) {
+            audit.log("LOAN", "REJECTED", e.getMessage());
+            throw e;
+        }
+
+        audit.log("LOAN", "CREATED", "Loan " + loan.getId() + " created");
+    }
+
+    public double returnedResource(Loan loan, GregorianCalendar date) {
+
+        double surcharge;
+
+        try {
+            surcharge = LoanExtent.INSTANCE.returnLoan(loan, date);
+        } catch (RuntimeException e) {
+            audit.log("LOAN", "RETURN_REJECTED", e.getMessage());
+            throw e;
+        }
+
+        audit.log("LOAN", "RETURNED", "Loan " + loan.getId() + " returned. Surcharge: £ " + surcharge);
+
+        return surcharge;
+    }
 
 }

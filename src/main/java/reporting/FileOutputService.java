@@ -8,30 +8,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileOutputService implements OutputService {
-	private final String path;
-	
-	public FileOutputService(String path) throws IOException {
-		this.path = path;
-		Files.writeString(Path.of(path), "");
-	}
-	
-	public synchronized void outputExtent(String title, Collection items) throws IOException {
+    private final String path;
 
-		try (FileWriter writer = new FileWriter(
-				path, StandardCharsets.UTF_8, true)) {
+    public FileOutputService(String path) throws IOException {
+        this.path = path;
+        Files.writeString(Path.of(path), "");
+    }
 
-			writer.write("\n" + title + "\n-----------\n");
+    public synchronized void outputExtent(String title, Collection items) throws IOException {
 
-			for (Object item : items) {
-				OutputServiceContributor contributor = (OutputServiceContributor) item;
+        try (FileWriter writer = new FileWriter(
+                path, StandardCharsets.UTF_8, true)) {
 
-				writer.write(contributor.getFormattedString());
-				writer.write(System.lineSeparator());
-			}
-		}
-	}
-	
-	public String getName() {
-		return "File output service";
-	}
+            writer.write("\n" + title + "\n-----------\n");
+
+            for (Object item : items) {
+                OutputServiceContributor contributor = (OutputServiceContributor) item;
+
+                writer.write(contributor.getFormattedString());
+                writer.write(System.lineSeparator());
+            }
+        }
+    }
+
+    public String getName() {
+        return "File output service";
+    }
 }

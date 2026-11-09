@@ -1,8 +1,8 @@
 # Trace Library Exercise
 
 ## Run instructions
-Please run the code via terminal using **./run.sh**  
-Do so either from Git Bash terminal or via running the run shell script.
+**Prerequisites:** JDK 21, Maven 3.9+, and Bash (Git Bash on Windows).  
+Please run the code via Bash terminal using **./run.sh**  or by clicking the **run.sh** bash script in the directory.
 
 ## Background
 

@@ -8,10 +8,10 @@ package reporting;
 
 /**
  * @author Simon
- *
+ * <p>
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public interface OutputServiceContributor {
-	public String getFormattedString();
+    String getFormattedString();
 }

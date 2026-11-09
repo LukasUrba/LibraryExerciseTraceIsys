@@ -23,4 +23,6 @@ class LoanTest {
         assertFalse(loan.isOverdue(new GregorianCalendar(2026, Calendar.FEBRUARY, 10)));
         assertTrue(loan.isOverdue(new GregorianCalendar(2026, Calendar.FEBRUARY, 11)));
     }
+
+
 }

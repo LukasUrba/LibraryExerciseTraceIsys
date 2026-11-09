@@ -9,118 +9,108 @@ import subscribers.Student;
 import java.time.temporal.ChronoUnit;
 import java.util.GregorianCalendar;
 
-public class Loan  implements OutputServiceContributor {
-	private Resource resource;
-	private Object subscriber;
-	private GregorianCalendar loanDate;
-	private GregorianCalendar returnDate;
-	private String id;
-	private double returnTotal;
-	
-	private static int idCounter = 0;
-	
-	public String getFormattedString() {
-		String formattedString = (resource==null?"Unknown":resource.getFormattedString()) + " loaned to ";
-		if ( subscriber == null ) {
-			formattedString += "Nobody";
-		}
-		else if ( subscriber instanceof Student ) {
-			formattedString += ((Student)subscriber).getFormattedString();
-		}
-		else if ( subscriber instanceof Pensioner ) {
-			formattedString += ((Pensioner)subscriber).getFormattedString();
-		}
-		else if ( subscriber instanceof PremiumMember ) {
-			formattedString += ((PremiumMember)subscriber).getFormattedString();
-		}
-		else {
-			formattedString += "Unknown subscriber type.";
-		}
-		return  formattedString;
-	}
+public class Loan implements OutputServiceContributor {
+    private Resource resource;
+    private Object subscriber;
+    private GregorianCalendar loanDate;
+    private GregorianCalendar returnDate;
+    private final String id;
+    private double returnTotal;
 
-	public GregorianCalendar getReturnDate() {
-		return returnDate;
-	}
-	void setId(String id) {
-		this.id = id;
-	}
-	public void setReturnDate(GregorianCalendar date) {
-		if (returnDate != null) {
-			throw new IllegalStateException("Loan has already been returned");
-		}
+    private static int idCounter = 0;
 
-		if (date == null || date.before(loanDate)) {
-			throw new IllegalArgumentException("Invalid return date");
-		}
+    public String getFormattedString() {
+        String formattedString = (resource == null ? "Unknown" : resource.getFormattedString()) + " loaned to ";
+        if (subscriber == null) {
+            formattedString += "Nobody";
+        } else if (subscriber instanceof Student) {
+            formattedString += ((Student) subscriber).getFormattedString();
+        } else if (subscriber instanceof Pensioner) {
+            formattedString += ((Pensioner) subscriber).getFormattedString();
+        } else if (subscriber instanceof PremiumMember) {
+            formattedString += ((PremiumMember) subscriber).getFormattedString();
+        } else {
+            formattedString += "Unknown subscriber type.";
+        }
+        return formattedString;
+    }
 
-		long days = ChronoUnit.DAYS.between(
-				loanDate.toZonedDateTime().toLocalDate(),
-				date.toZonedDateTime().toLocalDate()
-		);
+    public GregorianCalendar getReturnDate() {
+        return returnDate;
+    }
 
-		returnTotal = resource.getSurcharge() *
-				Math.max(1, days);
+    void setReturnDate(GregorianCalendar date) {
+        if (returnDate != null) {
+            throw new IllegalStateException("Loan has already been returned");
+        }
 
-		returnDate = (GregorianCalendar) date.clone();
-	}
+        if (date == null || date.before(loanDate)) {
+            throw new IllegalArgumentException("Invalid return date");
+        }
 
-	public double getReturnSurcharge() {
-		return returnTotal;
-	}
+        long days = ChronoUnit.DAYS.between(
+                loanDate.toZonedDateTime().toLocalDate(),
+                date.toZonedDateTime().toLocalDate()
+        );
 
-	public void setLoanDate(GregorianCalendar loanDate) {
-		this.loanDate = loanDate;
-	}
+        returnTotal = resource.getSurcharge() *
+                Math.max(1, days);
 
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
+        returnDate = (GregorianCalendar) date.clone();
+    }
 
-	public void setSubscriber(Object subscriber) {
-		this.subscriber = subscriber;
-	}
+    public double getReturnSurcharge() {
+        return returnTotal;
+    }
 
-	public Loan() {
-		this.id = "L"+idCounter++;
-	}
-	
-	public Loan(String id) {
-		this.id = id;
-		idCounter ++;
-	}
-	
-	public String getId() {
-		return id;
-	}
+    public void setLoanDate(GregorianCalendar loanDate) {
+        this.loanDate = loanDate;
+    }
 
-	public GregorianCalendar getLoanDate() {
-		return loanDate;
-	}
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
 
-	public Resource getResource() {
-		return resource;
-	}
+    public void setSubscriber(Object subscriber) {
+        this.subscriber = subscriber;
+    }
 
-	public Object getSubscriber() {
-		return subscriber;
-	}
-	
-	/**
-	 * A loan is overdue when the elapsed days exceed the resource's maximum loan
-	 * period. Handles month and year boundaries correctly.
-	 */
-	public boolean isOverdue(GregorianCalendar today) {
+    public Loan() {
+        this.id = "L" + idCounter++;
+    }
 
-		if ( today == null || loanDate == null || resource == null || returnDate != null) {
-			return false;
-		}
+    public Loan(String id) {
+        this.id = id;
+        idCounter++;
+    }
 
-		long days = ChronoUnit.DAYS.between(
-				loanDate.toZonedDateTime().toLocalDate(),
-				today.toZonedDateTime().toLocalDate()
-		);
+    public String getId() {
+        return id;
+    }
 
-		return days > resource.getMaxLoanPeriod();
-	}
+    public Resource getResource() {
+        return resource;
+    }
+
+    public Object getSubscriber() {
+        return subscriber;
+    }
+
+    /**
+     * A loan is overdue when the elapsed days exceed the resource's maximum loan
+     * period. Handles month and year boundaries correctly.
+     */
+    public boolean isOverdue(GregorianCalendar today) {
+
+        if (today == null || loanDate == null || resource == null || returnDate != null) {
+            return false;
+        }
+
+        long days = ChronoUnit.DAYS.between(
+                loanDate.toZonedDateTime().toLocalDate(),
+                today.toZonedDateTime().toLocalDate()
+        );
+
+        return days > resource.getMaxLoanPeriod();
+    }
 }
