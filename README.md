@@ -1,5 +1,9 @@
 # Trace Library Exercise
 
+## Run instructions
+Please run the code via terminal using **./run.sh**  
+Do so either from Git Bash terminal or via running the run shell script.
+
 ## Background
 
 The library system records and monitors resources that are loaned to subscribers of the library service. You have inherited this codebase and are asked to improve it. It has not been reviewed recently, and the code may contain defects and the written requirements may be incomplete.

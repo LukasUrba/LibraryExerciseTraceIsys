@@ -8,6 +8,8 @@
 5. Added overdue and return surcharge to Loan class
 6. File output service repaired.
 7. Audit logger implemented independently as console output with future integration to TraceAuditLogger pending.
+8. Implemented handling of concurrent actions.
+9. Bash script to run in console without IDE added
 
 ### Problems left & Changes to be made
 - Monolithic class structure. Was left because it would be a massive code rewrite to restructure and consider with SOLID principles.
@@ -24,3 +26,5 @@
 - Helped to create pom.xml with future requirements
 - Guidance for changing the functioning of the FileWriter
 - Help with making audit more robust
+- Final concurrency checks to add that I missed earlier and the test for it
+- Bash script to run in console without IDE
