@@ -7,6 +7,7 @@ import subscribers.SubscriberExtent;
 import reporting.FileOutputService;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class LibrarySimulator {
@@ -34,7 +35,7 @@ public class LibrarySimulator {
 		Resource resource = ResourceExtent.INSTANCE.findByPrimaryKey("R1");
 		Object subscriber = SubscriberExtent.INSTANCE.findByPrimaryKey("S1");
 		try {
-			library.loanResourceToSubscriber(resource, subscriber, new GregorianCalendar(2004, 00, 20));
+			library.loanResourceToSubscriber(resource, subscriber, new GregorianCalendar(2004, Calendar.JANUARY, 20));
 		}
 		catch (Exception e) {
 			if ( e.getMessage().startsWith("This resource is already on loan") ) {
@@ -49,11 +50,11 @@ public class LibrarySimulator {
 		}
 		
 		reporting.outputOutstandingLoansReport();
-		library.returnedResource(resource.getLoan(), new GregorianCalendar(2004, 00, 20));
-		
+		double surcharge = library.returnedResource(resource.getLoan(), new GregorianCalendar(2004, Calendar.JANUARY, 20));
+		System.out.println("Return surcharge: £" + surcharge);
 		reporting.outputOutstandingLoansReport();
 		try {
-			library.loanResourceToSubscriber(resource, subscriber, new GregorianCalendar(2004, 00, 20));
+			library.loanResourceToSubscriber(resource, subscriber, new GregorianCalendar(2004, Calendar.JANUARY, 20));
 		} 
 		catch (Exception e) {
 			if ( e.getMessage().startsWith("This resource is already on loan") ) {
